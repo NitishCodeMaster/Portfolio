@@ -1,141 +1,183 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Briefcase, Code, Home, Mail, Menu, Send, Sparkles, Trophy, User, X } from "lucide-react";
-import { cn } from "../utils/cn";
-
-const navItems = [
-  { id: "hero", icon: Home, label: "Home" },
-  { id: "about", icon: User, label: "About" },
-  { id: "skills", icon: Code, label: "Skills" },
-  { id: "projects", icon: Briefcase, label: "Projects" },
-  { id: "experience", icon: Trophy, label: "Experience" },
-  { id: "contact", icon: Mail, label: "Contact" },
-];
+import {
+  Menu,
+  X,
+  Terminal,
+  Send,
+  ArrowUpRight,
+  Home,
+  User,
+  Cpu,
+  Briefcase,
+  GraduationCap,
+  Mail
+} from "lucide-react";
 
 export const Navbar = () => {
-  const [hovered, setHovered] = useState<string | null>(null);
-  const [active, setActive] = useState("hero");
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [activeSection, setActiveSection] = useState("hero");
 
-  const scrollTo = (id: string) => {
-    setActive(id);
-    setMobileOpen(false);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  const navItems = [
+    { name: "Home", href: "#hero", icon: Home, id: "hero" },
+    { name: "About", href: "#about", icon: User, id: "about" },
+    { name: "Skills", href: "#skills", icon: Cpu, id: "skills" },
+    { name: "Projects", href: "#projects", icon: Briefcase, id: "projects" },
+    { name: "Experience", href: "#experience", icon: GraduationCap, id: "experience" },
+    { name: "Contact", href: "#contact", icon: Mail, id: "contact" },
+  ];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 200;
+      for (const item of navItems) {
+        const el = document.getElementById(item.id);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPosition >= top && scrollPosition < top + height) {
+            setActiveSection(item.id);
+            break;
+          }
+        }
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <motion.div
-      initial={{ y: -40, opacity: 0 }}
+    <motion.header
+      initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.9, delay: 0.4, ease: "easeOut" }}
-      className="fixed top-4 left-0 right-0 z-50 px-4 md:top-6"
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="fixed inset-x-0 top-0 z-50 mx-auto w-full max-w-7xl px-4 pt-4 md:px-6 md:pt-5"
     >
-      <nav
-        style={{
-          background:
-            "linear-gradient(135deg, rgba(255,255,255,0.075), rgba(255,255,255,0.025) 55%, rgba(148,163,184,0.035))",
-          border: "1px solid rgba(255,255,255,0.14)",
-          boxShadow: "0 22px 70px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.16)",
-        }}
-        className="relative mx-auto flex w-full max-w-7xl items-center justify-between overflow-hidden rounded-full px-4 py-3 backdrop-blur-2xl md:px-6"
-      >
-        <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-white/35 to-transparent" />
-        <div className="pointer-events-none absolute inset-0 opacity-55 [background-image:radial-gradient(circle_at_18%_35%,rgba(255,255,255,0.16)_0_1px,transparent_2px),radial-gradient(circle_at_68%_55%,rgba(184,164,255,0.18)_0_1px,transparent_2px)]" />
+      {/* Squarish Bento Dock Frame with sharp corners & Cyber-Grid Accents */}
+      <div className="relative flex h-14 items-center justify-between rounded-xl border border-white/[0.08] bg-neutral-950/60 px-5 shadow-[0_20px_50px_rgba(0,0,0,0.7),inset_0_1px_1px_rgba(255,255,255,0.05)] backdrop-blur-xl overflow-hidden">
 
-        <button
-          onClick={() => scrollTo("hero")}
-          className="group flex items-center gap-3 rounded-full pr-2 text-left"
-          aria-label="Go to home"
-        >
-          <span className="relative grid h-11 w-11 place-items-center rounded-full border border-white/15 bg-white/[0.08] shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]">
-            <Sparkles className="h-5 w-5 text-[#d8d3c6] transition-transform duration-300 group-hover:rotate-12" />
-            <span className="absolute inset-0 rounded-full ring-1 ring-[#b8a4ff]/20" />
-          </span>
-          <span className="hidden sm:block">
-            <span className="block text-lg font-bold tracking-tight text-white">
-              Nitish<span className="text-[#b8a4ff]">.</span>
-            </span>
-            <span className="block text-[11px] uppercase tracking-[0.22em] text-white/40">
-              Full Stack
-            </span>
-          </span>
-        </button>
+        {/* Corner Neon Cyber Nodes for Tricky Visual Vibe */}
+        <div className="absolute left-0 top-0 h-[2px] w-8 bg-gradient-to-r from-purple-500 to-transparent" />
+        <div className="absolute right-0 bottom-0 h-[2px] w-8 bg-gradient-to-l from-indigo-500 to-transparent" />
 
-        <div className="hidden items-center gap-1 md:flex">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onMouseEnter={() => setHovered(item.id)}
-              onMouseLeave={() => setHovered(null)}
-              onClick={() => scrollTo(item.id)}
-              className={cn(
-                "relative rounded-full px-4 py-2 text-sm font-medium transition-colors",
-                active === item.id || hovered === item.id ? "text-white" : "text-white/60 hover:text-white/85"
-              )}
-            >
-              {active === item.id && (
-                <>
+        {/* LEFT BRAND LOGO */}
+        <a href="#hero" className="group flex items-center gap-2.5 text-sm tracking-wider font-bold text-white shrink-0">
+          <div className="relative grid h-7 w-7 place-items-center rounded-lg border border-white/10 bg-white/[0.02] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] transition-colors group-hover:border-purple-500/30">
+            <Terminal className="h-3.5 w-3.5 text-purple-300 transition-transform group-hover:scale-110" />
+          </div>
+          <div className="flex flex-col leading-none">
+            <span className="font-sans uppercase font-extrabold tracking-[0.12em] text-xs text-zinc-100">Nitish.</span>
+            <span className="text-[8px] uppercase tracking-[0.18em] text-zinc-500 font-semibold mt-0.5 group-hover:text-purple-400 transition-colors">Full Stack</span>
+          </div>
+        </a>
+
+        {/* CENTER TABS: Spacious Squarish Hover Matrices */}
+        <nav className="hidden items-center gap-1 lg:flex mx-4">
+          {navItems.map((item, index) => {
+            const IconComponent = item.icon;
+            const isActive = activeSection === item.id;
+
+            return (
+              <a
+                key={item.name}
+                href={item.href}
+                onClick={() => setActiveSection(item.id)}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
+                className={`relative rounded-lg px-4 py-1.5 text-xs font-semibold tracking-wide transition-all duration-200 flex items-center gap-2 ${isActive ? "text-white" : "text-zinc-400 hover:text-zinc-100"
+                  }`}
+              >
+                {/* Active Element - Sharp Refractive Panel */}
+                {isActive && (
                   <motion.span
-                    layoutId="nav-active"
-                    className="absolute inset-0 rounded-full border border-white/20 bg-white/[0.11] shadow-[0_0_24px_rgba(216,211,198,0.18),inset_0_1px_0_rgba(255,255,255,0.18)]"
-                    transition={{ type: "spring", stiffness: 320, damping: 32 }}
+                    layoutId="navbar-active-bg"
+                    className="absolute inset-0 rounded-lg bg-gradient-to-b from-white/[0.06] to-white/[0.01] border-t border-x border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
+                    transition={{ type: "spring", stiffness: 400, damping: 28 }}
                   />
-                  <motion.span
-                    layoutId="nav-star"
-                    className="absolute -bottom-1 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-[#f1eee5] shadow-[0_0_14px_rgba(255,255,255,0.95)]"
-                    transition={{ type: "spring", stiffness: 320, damping: 32 }}
-                  />
-                </>
-              )}
-              <span className="relative z-10 flex items-center gap-2">
-                <item.icon className="h-4 w-4 text-current opacity-70" />
-                {item.label}
-              </span>
-            </button>
-          ))}
+                )}
+
+                {/* Hover Glass Slide Element */}
+                <AnimatePresence>
+                  {hoveredIndex === index && !isActive && (
+                    <motion.span
+                      layoutId="navbar-hover-bg"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="absolute inset-0 rounded-lg bg-white/[0.03] border border-white/5"
+                    />
+                  )}
+                </AnimatePresence>
+
+                <IconComponent className={`h-3.5 w-3.5 ${isActive ? "text-purple-400" : "opacity-60 text-zinc-400"}`} />
+                <span className="text-[12px] font-medium">{item.name}</span>
+              </a>
+            );
+          })}
+        </nav>
+
+        {/* RIGHT CONNECT ACTUATOR */}
+        <div className="hidden items-center gap-4 lg:flex shrink-0">
+          <div className="flex items-center gap-2 rounded-md bg-purple-500/5 border border-purple-500/10 px-2.5 py-1 text-[9px] text-purple-400/90 font-mono tracking-wider">
+            <span className="h-1.5 w-1.5 rounded-full bg-purple-500 animate-ping" />
+            <span>SYS_ONLINE</span>
+          </div>
+
+          <a
+            href="#contact"
+            className="group relative flex items-center gap-1.5 overflow-hidden rounded-lg border border-purple-500/30 bg-purple-500/[0.03] px-4 py-1.5 text-xs font-semibold tracking-wide text-purple-300 transition-all hover:border-purple-400/50 hover:bg-purple-500/[0.06] hover:text-white"
+          >
+            <span>Let's Connect</span>
+            <Send className="h-3 w-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </a>
         </div>
 
+        {/* MOBILE MENU ACTUATOR */}
         <button
-          onClick={() => scrollTo("contact")}
-          className="hidden items-center gap-2 rounded-full border border-white/12 bg-white/[0.055] px-5 py-2.5 text-sm font-semibold text-white/80 transition-all hover:border-white/20 hover:bg-white/[0.09] md:flex"
+          onClick={() => setIsOpen(!isOpen)}
+          className="grid h-8 w-8 place-items-center rounded-lg border border-white/5 bg-white/[0.02] text-zinc-400 lg:hidden"
         >
-          <Send className="h-4 w-4 text-[#d8d3c6]" />
-          Let's Connect
+          {isOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
         </button>
+      </div>
 
-        <button
-          onClick={() => setMobileOpen((open) => !open)}
-          className="grid h-11 w-11 place-items-center rounded-full border border-white/12 bg-white/[0.06] text-white md:hidden"
-          aria-label="Toggle navigation"
-        >
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
-      </nav>
-
+      {/* MOBILE PANEL */}
       <AnimatePresence>
-        {mobileOpen && (
+        {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -8 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            className="mx-auto mt-3 grid w-[calc(100%-1rem)] max-w-md gap-1 rounded-3xl border border-white/12 bg-black/80 p-3 text-white shadow-2xl backdrop-blur-2xl md:hidden"
+            exit={{ opacity: 0, y: -10 }}
+            className="absolute inset-x-4 top-16 z-50 rounded-xl border border-white/[0.06] bg-neutral-950/95 p-4 shadow-2xl backdrop-blur-xl lg:hidden"
           >
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollTo(item.id)}
-                className="flex items-center justify-between rounded-2xl px-4 py-3 text-left text-sm font-medium text-white/75 hover:bg-white/[0.08] hover:text-white"
-              >
-                {item.label}
-                <item.icon className="h-4 w-4 text-white/40" />
-              </button>
-            ))}
+            <div className="space-y-1">
+              {navItems.map((item) => {
+                const IconComponent = item.icon;
+                const isActive = activeSection === item.id;
+                return (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    onClick={() => {
+                      setActiveSection(item.id);
+                      setIsOpen(false);
+                    }}
+                    className={`flex items-center justify-between rounded-lg px-3 py-2.5 text-xs font-medium ${isActive ? "bg-purple-500/10 text-white" : "text-zinc-400 hover:bg-white/[0.02]"
+                      }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <IconComponent className="h-3.5 w-3.5" />
+                      <span>{item.name}</span>
+                    </div>
+                    <ArrowUpRight className="h-3 w-3 opacity-35" />
+                  </a>
+                );
+              })}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </motion.header>
   );
 };
