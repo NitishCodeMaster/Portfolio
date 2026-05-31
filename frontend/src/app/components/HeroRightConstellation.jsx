@@ -1,3 +1,4 @@
+
 import { motion } from "motion/react";
 import { Box, Users } from "lucide-react";
 
@@ -42,7 +43,7 @@ function SignalPanel({ icon: Icon, title, text, className }) {
       initial={{ opacity: 0, x: -18 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className={`absolute w-52 rounded-lg border border-purple-300/20 bg-black/25 px-4 py-3 text-left shadow-[0_18px_55px_rgba(0,0,0,0.38),0_0_34px_rgba(88,28,135,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl z-30 ${className}`}
+      className={`absolute w-52 rounded-lg border border-purple-300/20 bg-black/25 px-4 py-3 text-left shadow-[0_18px_55px_rgba(0,0,0,0.38),0_0_34px_rgba(88,28,135,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl ${className}`}
     >
       <div className="flex items-start gap-3">
         <div className="mt-0.5 grid h-7 w-7 place-items-center rounded-md border border-purple-300/15 bg-purple-500/[0.06] text-purple-300">
@@ -72,8 +73,7 @@ function HeroRightConstellation() {
             top: `${particle.top}%`,
             width: particle.size,
             height: particle.size,
-            boxShadow: "0 0 10px rgba(198,171,255,0.95), 0 0 28px rgba(134,60,241,0.45)",
-            opacity: 0.9
+            boxShadow: "0 0 14px rgba(216,180,254,0.9), 0 0 34px rgba(168,85,247,0.5)"
           }}
           animate={{
             y: [0, -18, 0],
@@ -103,7 +103,7 @@ function HeroRightConstellation() {
       />
 
       <motion.div
-        className="absolute right-[-128px] top-[38%] h-[430px] w-[430px] origin-center z-10"
+        className="absolute right-[-128px] top-[38%] h-[430px] w-[430px] origin-center"
         animate={{
           x: [0, -6, 0],
           y: [0, -10, 0],
@@ -112,25 +112,22 @@ function HeroRightConstellation() {
         }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
       >
-        <div className="absolute inset-0 -z-10 rounded-full blur-3xl bg-[radial-gradient(circle_at_32%_32%,rgba(168,85,247,0.16),rgba(99,102,241,0.045),transparent_45%)]" />
         <svg viewBox="0 0 420 420" className="h-full w-full overflow-visible">
           <defs>
             <linearGradient id="leftConstellationLine" x1="86" y1="20" x2="375" y2="382" gradientUnits="userSpaceOnUse">
-              <stop offset="0" stopColor="#cdb7ff" stopOpacity="0.88" />
-              <stop offset="0.42" stopColor="#9f7cff" stopOpacity="0.62" />
-              <stop offset="1" stopColor="#5b21b6" stopOpacity="0.34" />
+              <stop offset="0" stopColor="#ddd6fe" stopOpacity="0.74" />
+              <stop offset="0.42" stopColor="#8b5cf6" stopOpacity="0.48" />
+              <stop offset="1" stopColor="#312e81" stopOpacity="0.18" />
             </linearGradient>
             <radialGradient id="leftConstellationFill" cx="68%" cy="46%" r="62%">
-              <stop offset="0" stopColor="#8b5cf6" stopOpacity="0.32" />
-              <stop offset="0.58" stopColor="#6d28d9" stopOpacity="0.12" />
+              <stop offset="0" stopColor="#8b5cf6" stopOpacity="0.2" />
+              <stop offset="0.58" stopColor="#6d28d9" stopOpacity="0.075" />
               <stop offset="1" stopColor="#020204" stopOpacity="0" />
             </radialGradient>
-            <filter id="leftConstellationGlow" x="-60%" y="-60%" width="220%" height="220%">
-              <feGaussianBlur stdDeviation="6" result="blur" />
-              <feGaussianBlur stdDeviation="2" result="blur2" />
+            <filter id="leftConstellationGlow" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="4" result="blur" />
               <feMerge>
                 <feMergeNode in="blur" />
-                <feMergeNode in="blur2" />
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
@@ -139,7 +136,7 @@ function HeroRightConstellation() {
           <motion.path
             d="M340 20 L375 186 L358 382 L272 382 L165 236 L86 186 L126 82 Z"
             fill="url(#leftConstellationFill)"
-            animate={{ opacity: [0.28, 0.56, 0.28] }}
+            animate={{ opacity: [0.2, 0.36, 0.2] }}
             transition={{ duration: 6.2, repeat: Infinity, ease: "easeInOut" }}
           />
 
@@ -149,9 +146,9 @@ function HeroRightConstellation() {
               d={path}
               fill="none"
               stroke="url(#leftConstellationLine)"
-              strokeWidth={index === 0 ? 0.75 : 0.5}
+              strokeWidth={index === 0 ? 0.9 : 0.58}
               initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: [0.22, 0.78, 0.28] }}
+              animate={{ pathLength: 1, opacity: [0.14, 0.66, 0.22] }}
               transition={{
                 pathLength: { duration: 1.4, delay: index * 0.12, ease: "easeOut" },
                 opacity: { duration: 4.8 + index * 0.2, repeat: Infinity, ease: "easeInOut" }
@@ -164,11 +161,11 @@ function HeroRightConstellation() {
               key={`${cx}-${cy}`}
               cx={cx}
               cy={cy}
-              r={index % 3 === 0 ? 3.6 : 2.4}
-              fill={index % 4 === 0 ? "#e9ddff" : "#d6c9ff"}
+              r={index % 3 === 0 ? 3.2 : 2}
+              fill={index % 4 === 0 ? "#ddd6fe" : "#c4b5fd"}
               filter="url(#leftConstellationGlow)"
-              animate={{ opacity: [0.56, 1, 0.56], r: [2.2, index % 3 === 0 ? 4.4 : 3.2, 2.2] }}
-              transition={{ duration: 3.2 + index * 0.18, repeat: Infinity, ease: "easeInOut" }}
+              animate={{ opacity: [0.42, 1, 0.42], r: [2, index % 3 === 0 ? 4 : 2.8, 2] }}
+              transition={{ duration: 3.6 + index * 0.22, repeat: Infinity, ease: "easeInOut" }}
             />
           ))}
 
@@ -177,10 +174,10 @@ function HeroRightConstellation() {
             cy="20"
             r="82"
             fill="none"
-            stroke="#c084fc"
-            strokeWidth="0.5"
-            strokeOpacity="0.18"
-            animate={{ scale: [0.96, 1.08, 0.96], opacity: [0.12, 0.36, 0.12] }}
+            stroke="#a855f7"
+            strokeWidth="0.45"
+            strokeOpacity="0.13"
+            animate={{ scale: [0.96, 1.08, 0.96], opacity: [0.08, 0.28, 0.08] }}
             transition={{ duration: 4.6, repeat: Infinity, ease: "easeInOut" }}
             style={{ transformOrigin: "340px 20px" }}
           />
