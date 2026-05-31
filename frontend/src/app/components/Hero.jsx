@@ -2,13 +2,15 @@ import { motion } from "motion/react";
 import { ArrowRight, Download, Sparkle } from "lucide-react";
 import { Orb } from "./Orb";
 import { FloatingStars } from "./FloatingStars";
-import { BackgroundEffects } from "./BackgroundEffects"; 
+import { BackgroundEffects } from "./BackgroundEffects";
+import EarthGlobe from "./EarthGlobe";
+
 const Hero = () => {
   const skills = ["Java", "React", "Full Stack"];
   return <section id="hero" className="relative h-screen w-full overflow-hidden bg-[#020204] text-white flex flex-col items-center justify-center">
 
-    <BackgroundEffects /> 
-    <FloatingStars /> 
+    <BackgroundEffects />
+    <FloatingStars />
 
     <div className="relative z-10 mx-auto w-full max-w-4xl px-6 flex flex-col items-center justify-center text-center h-full pt-16">
 
@@ -73,6 +75,7 @@ const Hero = () => {
       </motion.div>
 
     </div>
+    <EarthGlobe />
   </section>;
 };
 
