@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   Menu,
   X,
-  Terminal,
   Send,
   ArrowUpRight,
   Home,
@@ -11,23 +10,37 @@ import {
   Cpu,
   Briefcase,
   GraduationCap,
-  Mail
+  Mail,
+  Code
 } from "lucide-react";
-const Navbar = () => {
+import { portfolioData } from "../../data/portfolioData";
+
+import { BrandLogo } from "./BrandLogo";
+
+const Navbar = ({ onNavigate, activeSectionOverride }) => {
+  const { personal } = portfolioData;
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [activeSection, setActiveSection] = useState("hero");
+
   const navItems = [
     { name: "Home", href: "#hero", icon: Home, id: "hero" },
     { name: "About", href: "#about", icon: User, id: "about" },
     { name: "Skills", href: "#skills", icon: Cpu, id: "skills" },
     { name: "Projects", href: "#projects", icon: Briefcase, id: "projects" },
+    { name: "Profiles", href: "#coding-profiles", icon: Code, id: "coding-profiles" },
     { name: "Experience", href: "#experience", icon: GraduationCap, id: "experience" },
     { name: "Contact", href: "#contact", icon: Mail, id: "contact" }
   ];
+
   useEffect(() => {
+    if (activeSectionOverride) {
+      setActiveSection(activeSectionOverride);
+      return;
+    }
+
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 200;
+      const scrollPosition = window.scrollY + 250;
       for (const item of navItems) {
         const el = document.getElementById(item.id);
         if (el) {
@@ -40,146 +53,156 @@ const Navbar = () => {
         }
       }
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-  return <motion.header
-    initial={{ y: -20, opacity: 0 }}
-    animate={{ y: 0, opacity: 1 }}
-    transition={{ duration: 0.6, ease: "easeOut" }}
-    className="fixed inset-x-0 top-0 z-50 mx-auto w-full max-w-7xl px-4 pt-4 md:px-6 md:pt-5"
-  >
-      {
-    /* Squarish Bento Dock Frame with sharp corners & Cyber-Grid Accents */
-  }
-      <div className="relative flex h-14 items-center justify-between rounded-xl border border-white/[0.08] bg-neutral-950/60 px-5 shadow-[0_20px_50px_rgba(0,0,0,0.7),inset_0_1px_1px_rgba(255,255,255,0.05)] backdrop-blur-xl overflow-hidden">
+  }, [activeSectionOverride]);
 
-        {
-    /* Corner Neon Cyber Nodes for Tricky Visual Vibe */
-  }
-        <div className="absolute left-0 top-0 h-[2px] w-8 bg-gradient-to-r from-purple-500 to-transparent" />
-        <div className="absolute right-0 bottom-0 h-[2px] w-8 bg-gradient-to-l from-indigo-500 to-transparent" />
+  const handleItemClick = (e, sectionId) => {
+    e.preventDefault();
+    setActiveSection(sectionId);
+    setIsOpen(false);
 
-        {
-    /* LEFT BRAND LOGO */
-  }
-        <a href="#hero" className="group flex items-center gap-2.5 text-sm tracking-wider font-bold text-white shrink-0">
-          <div className="relative grid h-7 w-7 place-items-center rounded-lg border border-white/10 bg-white/[0.02] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] transition-colors group-hover:border-purple-500/30">
-            <Terminal className="h-3.5 w-3.5 text-purple-300 transition-transform group-hover:scale-110" />
-          </div>
-          <div className="flex flex-col leading-none">
-            <span className="font-sans uppercase font-extrabold tracking-[0.12em] text-xs text-zinc-100">Nitish.</span>
-            <span className="text-[8px] uppercase tracking-[0.18em] text-zinc-500 font-semibold mt-0.5 group-hover:text-purple-400 transition-colors">Full Stack</span>
-          </div>
+    if (onNavigate) {
+      onNavigate(sectionId);
+    } else {
+      if (sectionId === "hero") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const el = document.getElementById(sectionId);
+        if (el) {
+          const navbarOffset = -96; // 96px clearance for comfortable space below fixed navbar
+          const elementPosition = el.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset + navbarOffset;
+          window.scrollTo({ top: Math.max(0, offsetPosition), behavior: "smooth" });
+        }
+      }
+    }
+  };
+
+  return (
+    <motion.header
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="fixed inset-x-0 top-0 z-50 mx-auto w-full max-w-7xl px-4 pt-4 md:px-6 md:pt-5"
+    >
+      {/* Refined Dock Frame */}
+      <div className="relative flex h-16 items-center justify-between rounded-2xl border border-white/[0.08] bg-[#09090d]/85 px-5 sm:px-6 shadow-[0_20px_50px_rgba(0,0,0,0.7),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-2xl">
+        
+        {/* LEFT BRANDING LOGO */}
+        <a
+          href="#hero"
+          onClick={(e) => handleItemClick(e, "hero")}
+          className="shrink-0 interactive cursor-pointer"
+        >
+          <BrandLogo size="sm" showSubtitle={true} />
         </a>
 
-        {
-    /* CENTER TABS: Spacious Squarish Hover Matrices */
-  }
-        <nav className="hidden items-center gap-1 lg:flex mx-4">
-          {navItems.map((item, index) => {
-    const IconComponent = item.icon;
-    const isActive = activeSection === item.id;
-    return <a
-      key={item.name}
-      href={item.href}
-      onClick={() => setActiveSection(item.id)}
-      onMouseEnter={() => setHoveredIndex(index)}
-      onMouseLeave={() => setHoveredIndex(null)}
-      className={`relative rounded-lg px-4 py-1.5 text-xs font-semibold tracking-wide transition-all duration-200 flex items-center gap-2 ${isActive ? "text-white" : "text-zinc-400 hover:text-zinc-100"}`}
-    >
-                {
-      /* Active Element - Sharp Refractive Panel */
-    }
-                {isActive && <motion.span
-      layoutId="navbar-active-bg"
-      className="absolute inset-0 rounded-lg bg-gradient-to-b from-white/[0.06] to-white/[0.01] border-t border-x border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
-      transition={{ type: "spring", stiffness: 400, damping: 28 }}
-    />}
+        {/* CENTER TABS */}
+        <nav className="hidden lg:flex items-center justify-center flex-1 max-w-2xl mx-6">
+          <div className="flex items-center justify-between w-full">
+            {navItems.map((item, index) => {
+              const IconComponent = item.icon;
+              const isActive = activeSection === item.id;
+              return (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  onClick={(e) => handleItemClick(e, item.id)}
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                  className={`relative rounded-xl px-3 py-2 text-xs lg:text-sm font-medium tracking-wide transition-all duration-200 flex items-center gap-2 interactive ${
+                    isActive ? "text-white" : "text-zinc-400 hover:text-zinc-100"
+                  }`}
+                >
+                  {/* Active Indicator Slide */}
+                  {isActive && (
+                    <motion.span
+                      layoutId="navbar-active-bg"
+                      className="absolute inset-0 rounded-xl bg-white/[0.08] border border-white/10 shadow-[0_2px_12px_rgba(0,0,0,0.4)]"
+                      transition={{ type: "spring", stiffness: 450, damping: 30 }}
+                    />
+                  )}
 
-                {
-      /* Hover Glass Slide Element */
-    }
-                <AnimatePresence>
-                  {hoveredIndex === index && !isActive && <motion.span
-      layoutId="navbar-hover-bg"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="absolute inset-0 rounded-lg bg-white/[0.03] border border-white/5"
-    />}
-                </AnimatePresence>
+                  {/* Hover Slide Element */}
+                  <AnimatePresence>
+                    {hoveredIndex === index && !isActive && (
+                      <motion.span
+                        layoutId="navbar-hover-bg"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute inset-0 rounded-xl bg-white/[0.035]"
+                      />
+                    )}
+                  </AnimatePresence>
 
-                <IconComponent className={`h-3.5 w-3.5 ${isActive ? "text-purple-400" : "opacity-60 text-zinc-400"}`} />
-                <span className="text-[12px] font-medium">{item.name}</span>
-              </a>;
-  })}
+                  <IconComponent className={`h-3.5 w-3.5 relative z-10 ${isActive ? "text-white" : "text-zinc-400 opacity-70"}`} />
+                  <span className="relative z-10">{item.name}</span>
+                </a>
+              );
+            })}
+          </div>
         </nav>
 
-        {
-    /* RIGHT CONNECT ACTUATOR */
-  }
-        <div className="hidden items-center gap-4 lg:flex shrink-0">
-          <div className="flex items-center gap-2 rounded-md bg-purple-500/5 border border-purple-500/10 px-2.5 py-1 text-[9px] text-purple-400/90 font-mono tracking-wider">
-            <span className="h-1.5 w-1.5 rounded-full bg-purple-500 animate-ping" />
-            <span>SYS_ONLINE</span>
-          </div>
-
+        {/* RIGHT ACTION CTA */}
+        <div className="hidden md:flex items-center shrink-0">
           <a
-    href="#contact"
-    className="group relative flex items-center gap-1.5 overflow-hidden rounded-lg border border-purple-500/30 bg-purple-500/[0.03] px-4 py-1.5 text-xs font-semibold tracking-wide text-purple-300 transition-all hover:border-purple-400/50 hover:bg-purple-500/[0.06] hover:text-white"
-  >
+            href="#contact"
+            onClick={(e) => handleItemClick(e, "contact")}
+            className="btn-sand-dark flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs font-semibold interactive group"
+          >
             <span>Let's Connect</span>
-            <Send className="h-3 w-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            <Send className="h-3 w-3 text-zinc-400 group-hover:text-white transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </a>
         </div>
 
-        {
-    /* MOBILE MENU ACTUATOR */
-  }
+        {/* MOBILE MENU BUTTON */}
         <button
-    onClick={() => setIsOpen(!isOpen)}
-    className="grid h-8 w-8 place-items-center rounded-lg border border-white/5 bg-white/[0.02] text-zinc-400 lg:hidden"
-  >
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label="Toggle navigation menu"
+          className="grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-white/[0.03] text-zinc-300 lg:hidden interactive"
+        >
           {isOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
         </button>
       </div>
 
-      {
-    /* MOBILE PANEL */
-  }
+      {/* MOBILE PANEL */}
       <AnimatePresence>
-        {isOpen && <motion.div
-    initial={{ opacity: 0, y: -10 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -10 }}
-    className="absolute inset-x-4 top-16 z-50 rounded-xl border border-white/[0.06] bg-neutral-950/95 p-4 shadow-2xl backdrop-blur-xl lg:hidden"
-  >
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="absolute inset-x-4 top-20 z-50 rounded-2xl border border-white/[0.08] bg-[#09090d]/95 p-4 shadow-2xl backdrop-blur-2xl lg:hidden"
+          >
             <div className="space-y-1">
               {navItems.map((item) => {
-    const IconComponent = item.icon;
-    const isActive = activeSection === item.id;
-    return <a
-      key={item.name}
-      href={item.href}
-      onClick={() => {
-        setActiveSection(item.id);
-        setIsOpen(false);
-      }}
-      className={`flex items-center justify-between rounded-lg px-3 py-2.5 text-xs font-medium ${isActive ? "bg-purple-500/10 text-white" : "text-zinc-400 hover:bg-white/[0.02]"}`}
-    >
-                    <div className="flex items-center gap-2.5">
-                      <IconComponent className="h-3.5 w-3.5" />
+                const IconComponent = item.icon;
+                const isActive = activeSection === item.id;
+                return (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    onClick={(e) => handleItemClick(e, item.id)}
+                    className={`flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium interactive ${
+                      isActive ? "bg-white/[0.08] text-white border border-white/10" : "text-zinc-400 hover:bg-white/[0.04] hover:text-white"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <IconComponent className={`h-4 w-4 ${isActive ? "text-white" : "text-zinc-400"}`} />
                       <span>{item.name}</span>
                     </div>
-                    <ArrowUpRight className="h-3 w-3 opacity-35" />
-                  </a>;
-  })}
+                    <ArrowUpRight className="h-4 w-4 opacity-40" />
+                  </a>
+                );
+              })}
             </div>
-          </motion.div>}
+          </motion.div>
+        )}
       </AnimatePresence>
-    </motion.header>;
+    </motion.header>
+  );
 };
-export {
-  Navbar
-};
+
+export { Navbar };

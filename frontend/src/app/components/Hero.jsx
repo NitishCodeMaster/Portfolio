@@ -1,84 +1,176 @@
+import { useState } from "react";
 import { motion } from "motion/react";
-import { ArrowRight, Download, Sparkle } from "lucide-react";
-import { Orb } from "./Orb";
-import { FloatingStars } from "./FloatingStars";
-import { BackgroundEffects } from "./BackgroundEffects";
+import { ArrowRight, FileText, Sparkles, MapPin, Download } from "lucide-react";
+import { ImageWithFallback } from "./figma/ImageWithFallback";
 import EarthGlobe from "./EarthGlobe";
+import { portfolioData } from "../../data/portfolioData";
+import { ResumeModal } from "./ResumeModal";
 
 const Hero = () => {
-  const skills = ["Java", "React", "Full Stack"];
-  return <section id="hero" className="relative h-screen w-full overflow-hidden bg-[#020204] text-white flex flex-col items-center justify-center">
+  const { personal, resume } = portfolioData;
+  const [isResumeOpen, setIsResumeOpen] = useState(false);
+  const [isPhotoActive, setIsPhotoActive] = useState(false);
+  const coreTech = ["React", "TypeScript", "Node.js", "Next.js", "Java", "PostgreSQL"];
 
-    <BackgroundEffects />
-    <FloatingStars />
+  return (
+    <section id="hero" className="relative min-h-[90vh] w-full overflow-hidden bg-transparent text-white flex items-center justify-center pt-24 pb-12 md:pt-28 md:pb-16">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
+          
+          {/* Left Column: Professional Introduction & Content */}
+          <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
+            
+            {/* Subtle Availability Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-1.5 text-xs font-medium text-zinc-300 backdrop-blur-md"
+            >
+              <span className="h-2 w-2 rounded-full bg-emerald-400/90 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
+              <span>{personal.availability}</span>
+            </motion.div>
 
-    <div className="relative z-10 mx-auto w-full max-w-4xl px-6 flex flex-col items-center justify-center text-center h-full pt-16">
+            {/* Main Headline */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="mb-5"
+            >
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-[1.12]">
+                Hi, I'm <span className="text-zinc-100">{personal.name}</span>
+                <span className="block text-2xl sm:text-3xl md:text-4xl font-semibold text-zinc-400 mt-2">
+                  {personal.role}
+                </span>
+              </h1>
+            </motion.div>
 
-      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6, ease: "easeOut" }}>
-        <Orb />
-      </motion.div>
+            {/* Professional Bio Paragraph */}
+            <motion.p
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="mb-7 max-w-xl text-zinc-400 text-sm sm:text-base leading-relaxed font-light"
+            >
+              {personal.bio}
+            </motion.p>
 
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
-        <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-purple-500/20 bg-purple-500/[0.03] px-3.5 py-1 text-[10px] font-bold tracking-wider text-purple-300 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
-          <Sparkle className="h-3 w-3 text-amber-300 animate-spin" style={{ animationDuration: "6s" }} />
-          OPEN FOR PRODUCTION CONTRACTS
-        </span>
-      </motion.div>
+            {/* Core Tech Stack Badges */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.28 }}
+              className="flex items-center justify-center lg:justify-start gap-2 mb-9 flex-wrap"
+            >
+              {coreTech.map((tech) => (
+                <span
+                  key={tech}
+                  className="rounded-lg border border-white/[0.08] bg-white/[0.02] px-3 py-1 text-xs font-medium text-zinc-300 hover:border-white/20 hover:text-white transition-colors"
+                >
+                  {tech}
+                </span>
+              ))}
+            </motion.div>
 
+            {/* Action CTAs */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.35 }}
+              className="flex flex-col sm:flex-row items-center gap-3.5 w-full sm:w-auto"
+            >
+              <a
+                href="#projects"
+                className="btn-sand-primary w-full sm:w-auto flex items-center justify-center gap-2.5 rounded-xl px-7 py-3.5 text-xs font-bold interactive group"
+              >
+                <span>View Projects</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+              </a>
 
-      <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="relative mb-5 w-full select-none">
+              <button
+                onClick={() => setIsResumeOpen(true)}
+                className="btn-sand-dark w-full sm:w-auto flex items-center justify-center gap-2.5 rounded-xl px-7 py-3.5 text-xs font-medium interactive group"
+              >
+                <FileText className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-colors" />
+                <span>View Resume</span>
+              </button>
+            </motion.div>
+          </div>
 
-        <span className="pointer-events-none absolute inset-x-0 -top-8 -z-10 text-[4.5rem] font-black uppercase leading-none text-white/[0.01] md:text-[7.5rem] lg:text-[8.5rem] tracking-[0.25em] block">
-          NITISH
-        </span>
-        <h1 className="text-4xl font-extrabold tracking-tight md:text-6xl lg:text-7xl leading-[1.1]">
-          <span className="block whitespace-nowrap bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
-            Hi, I'm Nitish
-          </span>
-          <span className="block bg-gradient-to-r from-purple-300 via-indigo-400 to-zinc-500 bg-clip-text text-transparent font-medium mt-1">
-            Full Stack Engineer
-          </span>
-        </h1>
-      </motion.div>
+          {/* Right Column: Clean Portrait / Profile Showcase Card */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-5 flex justify-center lg:justify-end"
+          >
+            <div className="relative w-full max-w-sm sm:max-w-md">
+              {/* Subtle ambient lighting behind portrait */}
+              <div className="absolute inset-0 bg-purple-500/10 rounded-3xl blur-2xl -z-10" />
 
-      <motion.p initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }} className="mb-6 max-w-2xl text-zinc-400 text-xs md:text-sm leading-relaxed font-light tracking-wide">
-        Crafting ultra-modern, scalable, and highly interactive web experiences.
-        Bridging the gap between creative design languages and production-grade software architecture.
-      </motion.p>
+              {/* Portrait Container Frame */}
+              <div className="relative rounded-3xl p-3 bg-[#0a0a0e]/90 border border-white/[0.09] shadow-[0_25px_60px_rgba(0,0,0,0.7)] group">
+                
+                {/* Photo Frame */}
+                <div
+                  onClick={() => setIsPhotoActive((prev) => !prev)}
+                  className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-zinc-900/60 border border-white/[0.06] cursor-pointer select-none"
+                  title="Click/tap to toggle color"
+                >
+                  <ImageWithFallback
+                    src={personal.portraitImage}
+                    alt={`${personal.name} - ${personal.role}`}
+                    className={`w-full h-full object-cover filter contrast-105 transition-all duration-700 ease-out ${
+                      isPhotoActive ? "grayscale-0" : "grayscale group-hover:grayscale-0 group-hover:scale-102"
+                    }`}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
 
+                  {/* Card Bottom Meta */}
+                  <div className="absolute bottom-4 inset-x-4 flex items-center justify-between pointer-events-none">
+                    <div className="flex flex-col">
+                      <span className="text-sm font-bold text-white font-display">{personal.name}</span>
+                      <span className="text-[11px] text-zinc-400">{personal.role}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#130b24]/90 border border-purple-500/35 backdrop-blur-md text-[10px] font-medium text-purple-200 shadow-[0_0_12px_rgba(168,85,247,0.2)]">
+                      <MapPin className="w-3 h-3 text-purple-400" />
+                      <span>{personal.location}</span>
+                    </div>
+                  </div>
+                </div>
 
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.38 }} className="flex items-center gap-2 mb-8 flex-wrap md:justify-start justify-center">
-        {skills.map((skill) => <span key={skill} className="rounded-full border border-white/[0.05] bg-white/[0.02] px-3.5 py-1 text-[10px] font-semibold tracking-wider text-zinc-400 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] backdrop-blur-md">
-          {skill}
-        </span>)}
-      </motion.div>
+                {/* Subtle Floating Highlight Badge */}
+                <motion.div
+                  animate={{ y: [-4, 4, -4] }}
+                  transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }}
+                  className="absolute -bottom-4 -left-4 rounded-2xl bg-[#111116]/95 border border-purple-500/25 px-4 py-3 shadow-[0_12px_30px_rgba(0,0,0,0.8)] backdrop-blur-xl hidden sm:flex items-center gap-3"
+                >
+                  <div className="h-8 w-8 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-300">
+                    <Sparkles className="w-4 h-4 text-purple-300" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white">Full Stack Architecture</div>
+                    <div className="text-[10px] text-zinc-400">Frontend • Backend • Cloud</div>
+                  </div>
+                </motion.div>
 
+              </div>
+            </div>
+          </motion.div>
 
-      <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.45 }} className="flex flex-col sm:flex-row items-center md:items-start justify-center md:justify-start gap-3.5">
-        <button className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-lg bg-white px-7 py-3.5 text-xs font-bold text-neutral-950 shadow-xl transition-transform hover:scale-[1.02] active:scale-95">
-          <span>Explore Systems</span>
-          <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-        </button>
-
-        <button className="group flex items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/[0.01] px-7 py-3.5 text-xs font-semibold text-zinc-300 backdrop-blur-md transition-all hover:scale-[1.02] hover:bg-white/[0.04]">
-          <Download className="w-4 h-4 text-zinc-500 group-hover:text-white transition-colors" />
-          <span>Secure Resume</span>
-        </button>
-      </motion.div>
-
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.6 }} className="absolute bottom-5 left-1/2 flex -translate-x-1/2 flex-col items-center gap-1.5 select-none pointer-events-none">
-        <span className="text-[8px] text-zinc-600 uppercase tracking-[0.25em] font-bold animate-pulse">SCROLL TO EXPLORE</span>
-        <div className="relative h-7 w-4 rounded-full border border-zinc-700 flex justify-center p-1">
-          <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }} className="h-1.5 w-1.5 rounded-full bg-purple-400" />
         </div>
-        <div className="h-8 w-[1px] bg-gradient-to-b from-zinc-700 to-transparent" />
-      </motion.div>
+      </div>
 
-    </div>
-    <EarthGlobe />
-  </section>;
+      <EarthGlobe />
+
+      {/* Resume Viewer Modal */}
+      <ResumeModal
+        isOpen={isResumeOpen}
+        onClose={() => setIsResumeOpen(false)}
+      />
+    </section>
+  );
 };
 
-export {
-  Hero
-};
+export { Hero };

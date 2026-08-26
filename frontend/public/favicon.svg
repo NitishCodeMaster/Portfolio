@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none">
+  <defs>
+    <linearGradient id="nkPillarLeft" x1="6" y1="6" x2="16" y2="34" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="60%" stop-color="#e4e4e7" />
+      <stop offset="100%" stop-color="#71717a" />
+    </linearGradient>
+    <linearGradient id="nkDiagonal" x1="10" y1="6" x2="30" y2="34" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#c084fc" />
+      <stop offset="45%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#6366f1" />
+    </linearGradient>
+    <linearGradient id="nkPillarRight" x1="24" y1="6" x2="34" y2="34" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#f4f4f5" />
+      <stop offset="50%" stop-color="#a1a1aa" />
+      <stop offset="100%" stop-color="#3f3f46" />
+    </linearGradient>
+  </defs>
+  <rect width="40" height="40" rx="10" fill="#09090e" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" />
+  <path d="M10 10H15.5V30H10V10Z" fill="url(#nkPillarLeft)" />
+  <path d="M14 10L26 30H20.5L8.5 10H14Z" fill="url(#nkDiagonal)" />
+  <path d="M24.5 10H30V30H24.5V10Z" fill="url(#nkPillarRight)" />
+  <circle cx="20" cy="20" r="1.8" fill="#ffffff" />
+</svg>

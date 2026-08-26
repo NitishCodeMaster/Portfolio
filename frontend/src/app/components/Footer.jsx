@@ -1,26 +1,77 @@
-import { Github, Twitter, Linkedin, Dribbble } from "lucide-react";
+import { Github, Linkedin, Twitter, Mail, ArrowUp } from "lucide-react";
+import { portfolioData } from "../../data/portfolioData";
+import { BrandLogo } from "./BrandLogo";
+
 const Footer = () => {
-  return <footer className="bg-zinc-950 border-t border-white/10 py-12">
-      <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+  const { personal, socials } = portfolioData;
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  return (
+    <footer className="bg-transparent border-t border-white/[0.06] py-10 relative z-10">
+      <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
         
         <div className="flex flex-col items-center md:items-start gap-2">
-          <h2 className="text-2xl font-bold font-display text-white">NK.</h2>
-          <p className="text-zinc-500 text-sm">© {(/* @__PURE__ */ new Date()).getFullYear()} Nitish Kumar. All rights reserved.</p>
+          <BrandLogo size="sm" showSubtitle={true} />
+          <p className="text-xs text-zinc-500 font-light mt-1">
+            © {new Date().getFullYear()} {personal.name}. Built with React, Three.js & Tailwind CSS.
+          </p>
         </div>
 
-        <div className="flex items-center gap-4">
-          {[Github, Twitter, Linkedin, Dribbble].map((Icon, i) => <a
-    key={i}
-    href="#"
-    className="w-10 h-10 rounded-full flex items-center justify-center bg-white/5 border border-white/10 text-zinc-400 hover:text-white hover:bg-white/10 transition-all hover:scale-110"
-  >
-              <Icon className="w-4 h-4" />
-            </a>)}
+        {/* Social Links */}
+        <div className="flex items-center gap-3">
+          <a
+            href={socials.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub Profile"
+            className="grid h-9 w-9 place-items-center rounded-xl bg-white/[0.03] border border-white/8 text-zinc-400 hover:text-white hover:border-white/20 hover:bg-white/[0.08] transition-all interactive"
+          >
+            <Github className="w-4 h-4" />
+          </a>
+
+          <a
+            href={socials.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn Profile"
+            className="grid h-9 w-9 place-items-center rounded-xl bg-white/[0.03] border border-white/8 text-zinc-400 hover:text-white hover:border-white/20 hover:bg-white/[0.08] transition-all interactive"
+          >
+            <Linkedin className="w-4 h-4" />
+          </a>
+
+          <a
+            href={socials.twitter}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Twitter Profile"
+            className="grid h-9 w-9 place-items-center rounded-xl bg-white/[0.03] border border-white/8 text-zinc-400 hover:text-white hover:border-white/20 hover:bg-white/[0.08] transition-all interactive"
+          >
+            <Twitter className="w-4 h-4" />
+          </a>
+
+          <a
+            href={socials.email}
+            aria-label="Send Email"
+            className="grid h-9 w-9 place-items-center rounded-xl bg-white/[0.03] border border-white/8 text-zinc-400 hover:text-white hover:border-white/20 hover:bg-white/[0.08] transition-all interactive"
+          >
+            <Mail className="w-4 h-4" />
+          </a>
+
+          <button
+            onClick={scrollToTop}
+            aria-label="Scroll to top"
+            className="grid h-9 w-9 place-items-center rounded-xl bg-white/[0.03] border border-white/8 text-zinc-400 hover:text-white hover:border-white/20 hover:bg-white/[0.08] transition-all interactive ml-2"
+          >
+            <ArrowUp className="w-4 h-4" />
+          </button>
         </div>
-        
+
       </div>
-    </footer>;
+    </footer>
+  );
 };
-export {
-  Footer
-};
+
+export { Footer };
