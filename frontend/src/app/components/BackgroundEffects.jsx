@@ -3,7 +3,6 @@ import { motion } from "motion/react";
 const BackgroundEffects = () => {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
-      {/* Cyber Technical Grid Overlay */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.003)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.003)_1px,transparent_1px)] bg-[size:70px_70px] [mask-image:radial-gradient(circle_at_50%_50%,#000_60%,transparent_100%)]" />
 
       {/* LEFT SIDE: Subtle Glowing Ambient Space Orb */}
