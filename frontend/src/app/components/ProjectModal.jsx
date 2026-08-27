@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   ArrowLeft,
@@ -13,11 +13,18 @@ import {
   ShieldCheck,
   Code2,
   Sparkles,
-  ChevronRight
+  ChevronRight,
+  BookOpen,
+  FileText
 } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { getRepoReadme } from "../../services/githubService";
+import { MarkdownRenderer } from "./MarkdownRenderer";
 
 export function ProjectModal({ project, liveGithubData, isOpen, onClose }) {
+  const [readmeContent, setReadmeContent] = useState(null);
+  const [isLoadingReadme, setIsLoadingReadme] = useState(false);
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") onClose();
@@ -33,6 +40,34 @@ export function ProjectModal({ project, liveGithubData, isOpen, onClose }) {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, onClose]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    if (isOpen && project?.githubRepo) {
+      setIsLoadingReadme(true);
+      getRepoReadme(project.githubRepo)
+        .then((markdown) => {
+          if (isMounted) {
+            setReadmeContent(markdown);
+            setIsLoadingReadme(false);
+          }
+        })
+        .catch(() => {
+          if (isMounted) {
+            setReadmeContent(null);
+            setIsLoadingReadme(false);
+          }
+        });
+    } else {
+      setReadmeContent(null);
+      setIsLoadingReadme(false);
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isOpen, project?.githubRepo]);
 
   if (!isOpen || !project) return null;
 
@@ -240,7 +275,7 @@ export function ProjectModal({ project, liveGithubData, isOpen, onClose }) {
           )}
 
           {/* 6. MAIN CONTENT: BALANCED 2-COLUMN STRUCTURE */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
             
             {/* Left Column: Overview & Applied Tech Stack */}
             <div className="lg:col-span-7 space-y-6">
@@ -297,7 +332,70 @@ export function ProjectModal({ project, liveGithubData, isOpen, onClose }) {
 
           </div>
 
-          {/* 7. BOTTOM NAVIGATION BAR */}
+          {/* 7. DYNAMIC GITHUB README SECTION (Gracefully displayed when available) */}
+          {isLoadingReadme && (
+            <div className="rounded-3xl border border-white/[0.08] bg-[#09090e]/85 p-6 sm:p-8 shadow-[0_15px_40px_rgba(0,0,0,0.5)] mb-10">
+              <div className="flex items-center gap-2.5 mb-6 animate-pulse">
+                <div className="w-5 h-5 rounded-md bg-white/[0.08]" />
+                <div className="h-4 w-44 rounded bg-white/[0.08]" />
+              </div>
+              <div className="space-y-3 animate-pulse">
+                <div className="h-4 w-3/4 rounded bg-white/[0.04]" />
+                <div className="h-4 w-5/6 rounded bg-white/[0.04]" />
+                <div className="h-4 w-2/3 rounded bg-white/[0.04]" />
+              </div>
+            </div>
+          )}
+
+          {!isLoadingReadme && readmeContent && (
+            <div className="rounded-3xl border border-white/[0.08] bg-[#09090e]/85 p-6 sm:p-8 shadow-[0_15px_40px_rgba(0,0,0,0.5)] mb-10 overflow-hidden">
+              {/* Section Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 mb-6 border-b border-white/[0.08]">
+                <div className="flex items-center gap-3">
+                  <div className="grid h-9 w-9 place-items-center rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 shrink-0">
+                    <BookOpen className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                      <span>Repository Documentation</span>
+                      <span className="font-mono text-xs text-zinc-400 font-normal px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/[0.06]">
+                        README.md
+                      </span>
+                    </h3>
+                    <p className="text-xs text-zinc-400">
+                      Live sync from {project.githubRepo}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-mono text-emerald-400">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    Live GitHub Source
+                  </span>
+                  {githubUrl && (
+                    <a
+                      href={githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/[0.03] border border-white/[0.08] text-xs font-mono text-zinc-300 hover:text-white hover:border-white/20 transition-all interactive"
+                    >
+                      <Github className="w-3.5 h-3.5" />
+                      <span>View on GitHub</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+
+              {/* Rendered GitHub Markdown */}
+              <MarkdownRenderer
+                content={readmeContent}
+                repoIdentifier={project.githubRepo}
+              />
+            </div>
+          )}
+
+          {/* 8. BOTTOM NAVIGATION BAR */}
           <div className="pt-6 border-t border-white/[0.08] flex items-center justify-between">
             <button
               onClick={onClose}

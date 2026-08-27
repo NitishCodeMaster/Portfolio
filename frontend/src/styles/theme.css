@@ -218,6 +218,26 @@ p, span, a, button, input, textarea {
   .interactive {
     cursor: pointer;
   }
+
+  @keyframes marquee-slide {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-skills-marquee {
+    display: flex;
+    width: max-content;
+    animation: marquee-slide 38s linear infinite;
+    will-change: transform;
+  }
+
+  .animate-skills-marquee:hover {
+    animation-play-state: paused;
+  }
 }
 
 @theme inline {

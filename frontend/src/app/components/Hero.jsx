@@ -5,6 +5,7 @@ import { ImageWithFallback } from "./figma/ImageWithFallback";
 import EarthGlobe from "./EarthGlobe";
 import { portfolioData } from "../../data/portfolioData";
 import { ResumeModal } from "./ResumeModal";
+import { SkillsMarquee } from "./SkillsMarquee";
 
 const Hero = () => {
   const { personal, resume } = portfolioData;
@@ -13,8 +14,8 @@ const Hero = () => {
   const coreTech = ["React", "TypeScript", "Node.js", "Next.js", "Java", "PostgreSQL"];
 
   return (
-    <section id="hero" className="relative min-h-[90vh] w-full overflow-hidden bg-transparent text-white flex items-center justify-center pt-24 pb-12 md:pt-28 md:pb-16">
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-6">
+    <section id="hero" className="relative min-h-[90vh] w-full overflow-hidden bg-transparent text-white flex flex-col justify-between pt-24 pb-0 md:pt-28">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 my-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
           
           {/* Left Column: Professional Introduction & Content */}
@@ -161,6 +162,9 @@ const Hero = () => {
 
         </div>
       </div>
+
+      {/* Dynamic Moving Skills Strip Marquee */}
+      <SkillsMarquee />
 
       <EarthGlobe />
 

@@ -1,31 +1,48 @@
 import { motion } from "motion/react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import { Code, Globe, Cpu, Zap, Sparkles } from "lucide-react";
+import {
+  Layers,
+  Server,
+  Database,
+  Cloud,
+  Sparkles,
+  GraduationCap,
+  FolderGit2,
+  Award,
+  Trophy
+} from "lucide-react";
 import { portfolioData } from "../../data/portfolioData";
+
+const statIconMap = {
+  "B.Tech CSE": GraduationCap,
+  "Projects Built": FolderGit2,
+  "Certifications": Award,
+  "Hackathon": Trophy
+};
 
 function AboutSection() {
   const { personal } = portfolioData;
 
   const cards = [
     {
-      icon: <Code className="w-5 h-5 text-purple-400" />,
-      title: "Frontend Engineering",
-      desc: "Crafting pixel-perfect, accessible, and highly interactive user interfaces using React and modern CSS."
+      icon: <Layers className="w-5 h-5 text-zinc-300 group-hover:text-purple-300 transition-colors" />,
+      title: "Full Stack Architecture",
+      desc: "Architecting end-to-end web platforms with responsive React frontends and structured component hierarchies."
     },
     {
-      icon: <Cpu className="w-5 h-5 text-sky-400" />,
-      title: "Backend Systems",
-      desc: "Building robust, scalable, and secure server-side architectures and APIs with Node.js and Go."
+      icon: <Server className="w-5 h-5 text-zinc-300 group-hover:text-purple-300 transition-colors" />,
+      title: "Backend & REST APIs",
+      desc: "Developing robust server-side logic, secure JWT authentication, and high-performance RESTful APIs."
     },
     {
-      icon: <Globe className="w-5 h-5 text-cyan-400" />,
-      title: "Web3 & Blockchain",
-      desc: "Exploring decentralized web technologies and smart contract integration for next-gen apps."
+      icon: <Database className="w-5 h-5 text-zinc-300 group-hover:text-purple-300 transition-colors" />,
+      title: "Databases & Algorithms",
+      desc: "Designing efficient MongoDB and MySQL schemas with strong foundations in Java DSA and problem solving."
     },
     {
-      icon: <Zap className="w-5 h-5 text-amber-400" />,
-      title: "Performance Optimization",
-      desc: "Tuning applications for lightning-fast load times and smooth 60fps animations."
+      icon: <Cloud className="w-5 h-5 text-zinc-300 group-hover:text-purple-300 transition-colors" />,
+      title: "Cloud & Dev Tools",
+      desc: "Streamlined version control with Git/GitHub, Postman API testing, and continuous deployment on Vercel."
     }
   ];
 
@@ -79,7 +96,8 @@ function AboutSection() {
               transition={{ duration: 0.6 }}
             >
               <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#130b24]/90 border border-purple-500/40 text-[#d8b4fe] text-xs font-bold tracking-[0.2em] uppercase mb-4 shadow-[0_0_20px_rgba(168,85,247,0.2),inset_0_1px_0_rgba(255,255,255,0.12)]">
-                About Me
+                <Sparkles className="w-3.5 h-3.5 text-purple-400" />
+                <span>About Me</span>
               </span>
               <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 tracking-tight leading-tight">
                 {personal.aboutHeading}
@@ -89,26 +107,41 @@ function AboutSection() {
               </p>
             </motion.div>
 
-            {/* Stats Grid */}
+            {/* Stats Grid with Clean Top-Aligned Minimal Icons */}
             {personal?.stats && personal.stats.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mb-10">
-                {personal.stats.map((stat, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.08, duration: 0.5 }}
-                    className="flex flex-col p-4 rounded-2xl bg-white/[0.02] border border-white/[0.05]"
-                  >
-                    <span className="text-2xl sm:text-3xl font-extrabold text-white mb-1 font-display tracking-tight">{stat.value}</span>
-                    <span className="text-[11px] text-zinc-400 uppercase tracking-wider font-medium">{stat.label}</span>
-                  </motion.div>
-                ))}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5 mb-10">
+                {personal.stats.map((stat, i) => {
+                  const StatIcon = statIconMap[stat.label] || Sparkles;
+                  return (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 15 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.08, duration: 0.5 }}
+                      className="flex flex-col p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-purple-500/30 hover:bg-white/[0.04] transition-all duration-300 group"
+                    >
+                      {/* Top Row: Clean Icon Badge */}
+                      <div className="w-8 h-8 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-zinc-400 group-hover:text-purple-300 group-hover:border-purple-500/30 group-hover:bg-purple-500/10 transition-all duration-300 mb-3 shrink-0">
+                        <StatIcon className="w-4 h-4" />
+                      </div>
+
+                      {/* Stat Metric Value */}
+                      <span className="text-2xl sm:text-3xl font-extrabold text-white font-display tracking-tight mb-1">
+                        {stat.value}
+                      </span>
+
+                      {/* Stat Label */}
+                      <span className="text-[11px] text-zinc-400 uppercase tracking-wider font-medium">
+                        {stat.label}
+                      </span>
+                    </motion.div>
+                  );
+                })}
               </div>
             )}
 
-            {/* Service Cards Grid */}
+            {/* Service Cards Grid with Refined Minimal Icons */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {cards.map((card, i) => (
                 <motion.div
@@ -119,11 +152,15 @@ function AboutSection() {
                   transition={{ delay: 0.15 + i * 0.08, duration: 0.5 }}
                   className="glass p-6 rounded-2xl hover:border-purple-500/30 hover:bg-white/[0.03] transition-all duration-300 group interactive"
                 >
-                  <div className="mb-4 p-2.5 bg-white/[0.03] border border-white/8 inline-block rounded-xl group-hover:scale-110 group-hover:border-purple-500/30 transition-all">
+                  <div className="mb-4 p-2.5 bg-white/[0.03] border border-white/[0.08] inline-block rounded-xl group-hover:scale-105 group-hover:border-purple-500/30 group-hover:bg-purple-500/10 transition-all duration-300">
                     {card.icon}
                   </div>
-                  <h4 className="text-base sm:text-lg font-semibold mb-2 text-zinc-100 group-hover:text-white transition-colors">{card.title}</h4>
-                  <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">{card.desc}</p>
+                  <h4 className="text-base sm:text-lg font-semibold mb-2 text-zinc-100 group-hover:text-white transition-colors">
+                    {card.title}
+                  </h4>
+                  <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                    {card.desc}
+                  </p>
                 </motion.div>
               ))}
             </div>

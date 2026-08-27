@@ -132,3 +132,90 @@ export function aggregateProjectTech(projects, liveRepoMap = {}) {
     .sort((a, b) => b[1] - a[1])
     .map(([name, count]) => ({ name, count }));
 }
+
+/**
+ * Dynamically fetch README.md content from a connected GitHub repository
+ * Supports local storage caching with TTL and graceful fallback on rate limits/404s.
+ */
+export async function getRepoReadme(repoIdentifier) {
+  if (!repoIdentifier || repoIdentifier === "#") {
+    return null;
+  }
+
+  const cleanRepo = repoIdentifier
+    .replace(/^https?:\/\/github\.com\//, "")
+    .replace(/\/$/, "");
+
+  const cacheKey = `gh_readme_${cleanRepo}`;
+  const cached = localStorage.getItem(cacheKey);
+
+  if (cached) {
+    try {
+      const parsed = JSON.parse(cached);
+      if (Date.now() - parsed.timestamp < CACHE_TTL_MS) {
+        return parsed.data;
+      }
+    } catch {
+      localStorage.removeItem(cacheKey);
+    }
+  }
+
+  try {
+    // 1. Primary: GitHub API with Accept: application/vnd.github.raw+json
+    const res = await fetch(`https://api.github.com/repos/${cleanRepo}/readme`, {
+      headers: {
+        Accept: "application/vnd.github.raw+json, application/vnd.github.v3.raw"
+      }
+    });
+
+    if (res.ok) {
+      const markdown = await res.text();
+      localStorage.setItem(
+        cacheKey,
+        JSON.stringify({ timestamp: Date.now(), data: markdown })
+      );
+      return markdown;
+    }
+
+    // 2. Secondary fallback: Direct fetch from raw.githubusercontent.com (main or master branch)
+    if (res.status === 403 || res.status === 429 || res.status === 404) {
+      try {
+        const rawRes = await fetch(`https://raw.githubusercontent.com/${cleanRepo}/main/README.md`);
+        if (rawRes.ok) {
+          const markdown = await rawRes.text();
+          localStorage.setItem(
+            cacheKey,
+            JSON.stringify({ timestamp: Date.now(), data: markdown })
+          );
+          return markdown;
+        }
+      } catch {}
+
+      try {
+        const rawMasterRes = await fetch(`https://raw.githubusercontent.com/${cleanRepo}/master/README.md`);
+        if (rawMasterRes.ok) {
+          const markdown = await rawMasterRes.text();
+          localStorage.setItem(
+            cacheKey,
+            JSON.stringify({ timestamp: Date.now(), data: markdown })
+          );
+          return markdown;
+        }
+      } catch {}
+    }
+
+    // Cache null for non-existent READMEs (404) to avoid repeated failed requests
+    if (res.status === 404) {
+      localStorage.setItem(
+        cacheKey,
+        JSON.stringify({ timestamp: Date.now(), data: null })
+      );
+      return null;
+    }
+
+    return null;
+  } catch (error) {
+    console.warn(`Error fetching README for ${cleanRepo}:`, error);
+    return null;
+  }
+}
